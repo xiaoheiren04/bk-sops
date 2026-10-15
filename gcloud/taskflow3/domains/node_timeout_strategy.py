@@ -11,6 +11,8 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 from abc import ABCMeta, abstractmethod
+from django.conf import settings
+from pipeline.eri.models import State
 
 
 class NodeTimeoutStrategy(metaclass=ABCMeta):
@@ -34,8 +36,30 @@ class ForcedFailAndSkipStrategy(NodeTimeoutStrategy):
             return skip_result
         return fail_result
 
+class ForcedFailAndRetryStrategy(NodeTimeoutStrategy):
+    def deal_with_timeout_node(self, task, node_id):
+        state = State.objects.only("retry").get(node_id=node_id)
+        fail_result = task.nodes_action(
+            "forced_fail",
+            node_id,
+            self.TIMEOUT_NODE_OPERATOR,
+            full_ex_data = self.ex_data_hint,
+            send_post_set_state_singal = False,
+        )
+        if not fail_result["result"]:
+            return fail_result
+        max_retry_times = settings.TASKFLOW_NODE_TIMEOUT_RETRY_MAX_TIMES
+        if state.retry >= max_retry_times:
+            fail_result["message"] = (
+                "The node has been terminated by the system due to exceeding the 'Timeout Setting'," \
+                "and will not be retried because the timeout retry limit has been reached."
+            )
+            return fail_result
+        return task.nodes_action("retry", node_id, self.TIMEOUT_NODE_OPERATOR, inputs = {})
 
 node_timeout_handler = {
     "forced_fail": ForcedFailStrategy(),
     "forced_fail_and_skip": ForcedFailAndSkipStrategy(),
+    "forced_fail_and_retry": ForcedFailAndRetryStrategy(),
+
 }

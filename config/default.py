@@ -163,7 +163,7 @@ MIDDLEWARE += (
     "apigw_manager.apigw.authentication.ApiGatewayJWTUserMiddleware",  # JWT 透传的用户信息
 )
 
-AUTHENTICATION_BACKENDS += ("apigw_manager.apigw.authentication.UserModelBackend",)
+AUTHENTICATION_BACKENDS += ("django.contrib.auth.backends.ModelBackend",)
 
 ENABLE_IPV6 = env.ENABLE_IPV6
 # paasv3 和 开启了ipv6 才会尝试加载 BK_API_URL_TMPL 这个变量
@@ -701,6 +701,9 @@ CELERYBEAT_SCHEDULE.update(
         }
     }
 )
+
+# 节点超时后自动重试最大次数
+TASKFLOW_NODE_TIMEOUT_RETRY_MAX_TIMES = 3
 
 CELERY_ROUTES.update({"gcloud.clocked_task.tasks.clocked_task_start": PIPELINE_ADDITIONAL_PRIORITY_ROUTING})
 

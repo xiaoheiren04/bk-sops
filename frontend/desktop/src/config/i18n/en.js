@@ -1350,6 +1350,7 @@ const en = {
     '后': '',
     '则': '',
     '强制终止后跳过': 'Auto Skip after terminate',
+    '强制终止后重试': 'Auto Retry after terminate',
     '该功能仅对V2引擎生效': 'This function takes effect only for the V2 engine',
     '转交': 'Transfer',
     '由': 'By',

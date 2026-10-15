@@ -190,6 +190,7 @@
                             :clearable="false" @change="updateData">
                             <bk-option id="forced_fail" :name="$t('强制终止')"></bk-option>
                             <bk-option id="forced_fail_and_skip" :name="$t('强制终止后跳过')"></bk-option>
+                            <bk-option id="forced_fail_and_retry" :name="$t('强制终止后重试')"></bk-option>
                         </bk-select>
                     </template>
                 </div>
@@ -405,6 +406,7 @@
                                 :clearable="false" @change="updateData">
                                 <bk-option id="forced_fail" :name="$t('强制终止')"></bk-option>
                                 <bk-option id="forced_fail_and_skip" :name="$t('强制终止后跳过')"></bk-option>
+                                <bk-option id="forced_fail_and_retry" :name="$t('强制终止后重试')"></bk-option>
                             </bk-select>
                         </template>
                     </div>

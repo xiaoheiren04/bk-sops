@@ -1396,7 +1396,7 @@ class TimeoutNodeConfigManager(models.Manager):
 
 
 class TimeoutNodeConfig(models.Model):
-    ACTION_TYPE = (("forced_fail", _("强制失败")), ("forced_fail_and_skip", _("强制失败并跳过")))
+    ACTION_TYPE = (("forced_fail", _("强制失败")), ("forced_fail_and_skip", _("强制失败并跳过")), ("forced_fail_and_retry", _("强制失败并重试")))
     task_id = models.BigIntegerField(verbose_name="taskflow id")
     root_pipeline_id = models.CharField(verbose_name="root pipeline id", max_length=64)
     action = models.CharField(verbose_name="action", choices=ACTION_TYPE, max_length=32)
